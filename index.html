@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Echo Web Viewer</title>
+
+  <title>unLOCKED</title>
 
   <style>
     * {
@@ -29,7 +30,7 @@
       height: 100%;
     }
 
-    /* Top browser bar */
+    /* Toolbar */
     .toolbar {
       display: flex;
       align-items: center;
@@ -144,6 +145,7 @@
       background: white;
     }
 
+    /* Home screen */
     .home-screen {
       position: absolute;
       inset: 0;
@@ -151,22 +153,23 @@
       align-items: center;
       justify-content: center;
       padding: 30px;
+      overflow: auto;
       background:
         radial-gradient(circle at top, #252a38 0%, #111318 55%);
-      text-align: center;
     }
 
     .home-card {
-      width: min(600px, 100%);
-      padding: 40px;
+      width: min(700px, 100%);
+      padding: 35px;
       border: 1px solid #30343c;
       border-radius: 18px;
-      background: rgba(27, 30, 36, 0.92);
+      background: rgba(27, 30, 36, 0.94);
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      text-align: center;
     }
 
     .home-card h1 {
-      margin: 0 0 10px;
+      margin: 0 0 8px;
       font-size: 30px;
     }
 
@@ -174,6 +177,36 @@
       margin: 8px 0;
       color: #aeb4c0;
       line-height: 1.5;
+    }
+
+    /* Canva logo */
+    .canva-preview {
+      width: 100%;
+      max-width: 600px;
+      aspect-ratio: 1.414 / 1;
+      margin: 25px auto;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+      background: #fff;
+    }
+
+    .canva-preview iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .canva-credit {
+      display: inline-block;
+      margin-top: 8px;
+      color: #8f96a3;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .canva-credit:hover {
+      color: white;
     }
 
     .example-buttons {
@@ -190,7 +223,7 @@
       background: #282c34;
     }
 
-    /* Bottom status bar */
+    /* Status bar */
     .statusbar {
       display: flex;
       align-items: center;
@@ -228,42 +261,52 @@
       #goButton {
         padding: 0 9px;
       }
+
+      .home-card {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 
 <body>
+
   <div class="browser">
 
+    <!-- Toolbar -->
     <div class="toolbar">
 
       <div class="logo">
-        <div class="logo-icon">🌐</div>
-        <span>Echo Web Viewer</span>
+        <div class="logo-icon">🔓</div>
+        <span>unLOCKED</span>
       </div>
 
       <button
         class="nav-button"
         id="backButton"
         title="Back"
-        aria-label="Back"
-      >←</button>
+        aria-label="Back">
+        ←
+      </button>
 
       <button
         class="nav-button"
         id="forwardButton"
         title="Forward"
-        aria-label="Forward"
-      >→</button>
+        aria-label="Forward">
+        →
+      </button>
 
       <button
         class="nav-button"
         id="reloadButton"
         title="Reload"
-        aria-label="Reload"
-      >↻</button>
+        aria-label="Reload">
+        ↻
+      </button>
 
       <div class="address-area">
+
         <span class="lock">🔒</span>
 
         <input
@@ -271,54 +314,95 @@
           type="text"
           autocomplete="off"
           spellcheck="false"
-          placeholder="Enter a website, e.g. https://example.com"
+          placeholder="Enter a website..."
         >
 
-        <button id="goButton">Go</button>
+        <button id="goButton">
+          Go
+        </button>
+
       </div>
 
     </div>
 
+    <!-- Viewer -->
     <div class="viewer-container">
 
+      <!-- Home -->
       <div class="home-screen" id="homeScreen">
+
         <div class="home-card">
-          <h1>🌐 Web Viewer</h1>
+
+          <h1>🔓 unLOCKED</h1>
 
           <p>
-            Enter a website above to open it inside this page.
+            A simple web viewer made by Ech0playsss.
           </p>
 
+          <!-- Canva Design -->
+          <div class="canva-preview">
+
+            <iframe
+              loading="lazy"
+              src="https://www.canva.com/design/DAHXHNh3jek/I8D-X7QRVPHShpigaz8IAA/view?embed"
+              allowfullscreen
+              allow="fullscreen">
+            </iframe>
+
+          </div>
+
+          <a
+            class="canva-credit"
+            href="https://www.canva.com/design/DAHXHNh3jek/I8D-X7QRVPHShpigaz8IAA/view"
+            target="_blank"
+            rel="noopener">
+            🔓 by Ech0playsss
+          </a>
+
           <p>
-            Some websites may refuse to load because they don't
-            allow themselves to be embedded in an iframe.
+            Enter a website above to open it inside unLOCKED.
           </p>
 
           <div class="example-buttons">
-            <button class="example" data-url="https://example.com">
+
+            <button
+              class="example"
+              data-url="https://example.com">
               Example.com
             </button>
 
-            <button class="example" data-url="https://www.wikipedia.org">
+            <button
+              class="example"
+              data-url="https://www.wikipedia.org">
               Wikipedia
             </button>
+
           </div>
+
         </div>
+
       </div>
 
+      <!-- Website iframe -->
       <iframe
         id="viewer"
         title="Website Viewer"
         sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-presentation allow-scripts allow-same-origin"
         referrerpolicy="no-referrer"
-        hidden
-      ></iframe>
+        hidden>
+      </iframe>
 
     </div>
 
+    <!-- Status -->
     <div class="statusbar">
+
       <span class="status-dot"></span>
-      <span id="statusText">Ready</span>
+
+      <span id="statusText">
+        Ready
+      </span>
+
     </div>
 
   </div>
@@ -326,6 +410,7 @@
   <script>
     const urlInput = document.getElementById("urlInput");
     const goButton = document.getElementById("goButton");
+
     const viewer = document.getElementById("viewer");
     const homeScreen = document.getElementById("homeScreen");
 
@@ -339,18 +424,17 @@
     let historyIndex = -1;
 
     function normalizeURL(input) {
+
       input = input.trim();
 
       if (!input) {
         return null;
       }
 
-      // Allow normal HTTPS/HTTP URLs.
       if (/^https?:\/\//i.test(input)) {
         return input;
       }
 
-      // Treat domain-like input as HTTPS.
       if (
         input.includes(".") &&
         !input.includes(" ")
@@ -358,12 +442,12 @@
         return "https://" + input;
       }
 
-      // Otherwise search with DuckDuckGo.
       return "https://duckduckgo.com/?q=" +
         encodeURIComponent(input);
     }
 
     function loadURL(input, addToHistory = true) {
+
       const url = normalizeURL(input);
 
       if (!url) {
@@ -371,15 +455,23 @@
       }
 
       viewer.src = url;
+
       viewer.hidden = false;
+
       homeScreen.style.display = "none";
 
       urlInput.value = url;
-      statusText.textContent = "Loading " + url;
+
+      statusText.textContent =
+        "Loading " + url;
 
       if (addToHistory) {
-        history = history.slice(0, historyIndex + 1);
+
+        history =
+          history.slice(0, historyIndex + 1);
+
         history.push(url);
+
         historyIndex++;
 
         updateNavigationButtons();
@@ -387,7 +479,10 @@
     }
 
     function updateNavigationButtons() {
-      backButton.disabled = historyIndex <= 0;
+
+      backButton.disabled =
+        historyIndex <= 0;
+
       forwardButton.disabled =
         historyIndex >= history.length - 1;
 
@@ -403,56 +498,89 @@
     });
 
     urlInput.addEventListener("keydown", event => {
+
       if (event.key === "Enter") {
         loadURL(urlInput.value);
       }
+
     });
 
     backButton.addEventListener("click", () => {
+
       if (historyIndex > 0) {
+
         historyIndex--;
-        const url = history[historyIndex];
+
+        const url =
+          history[historyIndex];
 
         viewer.src = url;
+
         urlInput.value = url;
-        statusText.textContent = "Loading " + url;
+
+        statusText.textContent =
+          "Loading " + url;
 
         updateNavigationButtons();
       }
+
     });
 
     forwardButton.addEventListener("click", () => {
+
       if (historyIndex < history.length - 1) {
+
         historyIndex++;
-        const url = history[historyIndex];
+
+        const url =
+          history[historyIndex];
 
         viewer.src = url;
+
         urlInput.value = url;
-        statusText.textContent = "Loading " + url;
+
+        statusText.textContent =
+          "Loading " + url;
 
         updateNavigationButtons();
       }
+
     });
 
     reloadButton.addEventListener("click", () => {
+
       if (!viewer.hidden) {
+
         viewer.src = viewer.src;
-        statusText.textContent = "Reloading...";
+
+        statusText.textContent =
+          "Reloading...";
       }
+
     });
 
     viewer.addEventListener("load", () => {
-      statusText.textContent = "Page loaded";
+
+      statusText.textContent =
+        "Page loaded";
+
     });
 
-    document.querySelectorAll(".example").forEach(button => {
-      button.addEventListener("click", () => {
-        loadURL(button.dataset.url);
+    document
+      .querySelectorAll(".example")
+      .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+          loadURL(button.dataset.url);
+
+        });
+
       });
-    });
 
     updateNavigationButtons();
   </script>
+
 </body>
 </html>
 ```
