@@ -1,0 +1,458 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echo Web Viewer</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #111318;
+      color: white;
+    }
+
+    .browser {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Top browser bar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 64px;
+      padding: 10px;
+      background: #1b1e24;
+      border-bottom: 1px solid #30343c;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 8px;
+      font-size: 17px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .logo-icon {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: #5865f2;
+      font-size: 17px;
+    }
+
+    button {
+      border: 0;
+      color: #ddd;
+      background: #282c34;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button:hover {
+      background: #343944;
+    }
+
+    button:active {
+      transform: scale(0.96);
+    }
+
+    .nav-button {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      font-size: 18px;
+    }
+
+    .address-area {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      height: 40px;
+      overflow: hidden;
+      border: 1px solid #353a44;
+      border-radius: 10px;
+      background: #121419;
+    }
+
+    .lock {
+      padding-left: 12px;
+      color: #8f96a3;
+      font-size: 14px;
+    }
+
+    #urlInput {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      padding: 0 10px;
+      border: 0;
+      outline: 0;
+      color: white;
+      background: transparent;
+      font-size: 14px;
+    }
+
+    #urlInput::placeholder {
+      color: #777d88;
+    }
+
+    #goButton {
+      height: 32px;
+      margin-right: 4px;
+      padding: 0 13px;
+      border-radius: 7px;
+      background: #5865f2;
+      color: white;
+      font-weight: bold;
+    }
+
+    #goButton:hover {
+      background: #4752c4;
+    }
+
+    /* Viewer */
+    .viewer-container {
+      position: relative;
+      flex: 1;
+      background: #0d0f12;
+    }
+
+    #viewer {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: white;
+    }
+
+    .home-screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background:
+        radial-gradient(circle at top, #252a38 0%, #111318 55%);
+      text-align: center;
+    }
+
+    .home-card {
+      width: min(600px, 100%);
+      padding: 40px;
+      border: 1px solid #30343c;
+      border-radius: 18px;
+      background: rgba(27, 30, 36, 0.92);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .home-card h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+    }
+
+    .home-card p {
+      margin: 8px 0;
+      color: #aeb4c0;
+      line-height: 1.5;
+    }
+
+    .example-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .example {
+      padding: 10px 14px;
+      border-radius: 9px;
+      background: #282c34;
+    }
+
+    /* Bottom status bar */
+    .statusbar {
+      display: flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      background: #1b1e24;
+      border-top: 1px solid #30343c;
+      color: #8f96a3;
+      font-size: 12px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      margin-right: 7px;
+      border-radius: 50%;
+      background: #43b581;
+    }
+
+    @media (max-width: 650px) {
+      .logo span {
+        display: none;
+      }
+
+      .toolbar {
+        gap: 5px;
+        padding: 7px;
+      }
+
+      .nav-button {
+        width: 34px;
+        height: 34px;
+      }
+
+      #goButton {
+        padding: 0 9px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="browser">
+
+    <div class="toolbar">
+
+      <div class="logo">
+        <div class="logo-icon">🌐</div>
+        <span>Echo Web Viewer</span>
+      </div>
+
+      <button
+        class="nav-button"
+        id="backButton"
+        title="Back"
+        aria-label="Back"
+      >←</button>
+
+      <button
+        class="nav-button"
+        id="forwardButton"
+        title="Forward"
+        aria-label="Forward"
+      >→</button>
+
+      <button
+        class="nav-button"
+        id="reloadButton"
+        title="Reload"
+        aria-label="Reload"
+      >↻</button>
+
+      <div class="address-area">
+        <span class="lock">🔒</span>
+
+        <input
+          id="urlInput"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Enter a website, e.g. https://example.com"
+        >
+
+        <button id="goButton">Go</button>
+      </div>
+
+    </div>
+
+    <div class="viewer-container">
+
+      <div class="home-screen" id="homeScreen">
+        <div class="home-card">
+          <h1>🌐 Web Viewer</h1>
+
+          <p>
+            Enter a website above to open it inside this page.
+          </p>
+
+          <p>
+            Some websites may refuse to load because they don't
+            allow themselves to be embedded in an iframe.
+          </p>
+
+          <div class="example-buttons">
+            <button class="example" data-url="https://example.com">
+              Example.com
+            </button>
+
+            <button class="example" data-url="https://www.wikipedia.org">
+              Wikipedia
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <iframe
+        id="viewer"
+        title="Website Viewer"
+        sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-presentation allow-scripts allow-same-origin"
+        referrerpolicy="no-referrer"
+        hidden
+      ></iframe>
+
+    </div>
+
+    <div class="statusbar">
+      <span class="status-dot"></span>
+      <span id="statusText">Ready</span>
+    </div>
+
+  </div>
+
+  <script>
+    const urlInput = document.getElementById("urlInput");
+    const goButton = document.getElementById("goButton");
+    const viewer = document.getElementById("viewer");
+    const homeScreen = document.getElementById("homeScreen");
+
+    const backButton = document.getElementById("backButton");
+    const forwardButton = document.getElementById("forwardButton");
+    const reloadButton = document.getElementById("reloadButton");
+
+    const statusText = document.getElementById("statusText");
+
+    let history = [];
+    let historyIndex = -1;
+
+    function normalizeURL(input) {
+      input = input.trim();
+
+      if (!input) {
+        return null;
+      }
+
+      // Allow normal HTTPS/HTTP URLs.
+      if (/^https?:\/\//i.test(input)) {
+        return input;
+      }
+
+      // Treat domain-like input as HTTPS.
+      if (
+        input.includes(".") &&
+        !input.includes(" ")
+      ) {
+        return "https://" + input;
+      }
+
+      // Otherwise search with DuckDuckGo.
+      return "https://duckduckgo.com/?q=" +
+        encodeURIComponent(input);
+    }
+
+    function loadURL(input, addToHistory = true) {
+      const url = normalizeURL(input);
+
+      if (!url) {
+        return;
+      }
+
+      viewer.src = url;
+      viewer.hidden = false;
+      homeScreen.style.display = "none";
+
+      urlInput.value = url;
+      statusText.textContent = "Loading " + url;
+
+      if (addToHistory) {
+        history = history.slice(0, historyIndex + 1);
+        history.push(url);
+        historyIndex++;
+
+        updateNavigationButtons();
+      }
+    }
+
+    function updateNavigationButtons() {
+      backButton.disabled = historyIndex <= 0;
+      forwardButton.disabled =
+        historyIndex >= history.length - 1;
+
+      backButton.style.opacity =
+        backButton.disabled ? "0.4" : "1";
+
+      forwardButton.style.opacity =
+        forwardButton.disabled ? "0.4" : "1";
+    }
+
+    goButton.addEventListener("click", () => {
+      loadURL(urlInput.value);
+    });
+
+    urlInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        loadURL(urlInput.value);
+      }
+    });
+
+    backButton.addEventListener("click", () => {
+      if (historyIndex > 0) {
+        historyIndex--;
+        const url = history[historyIndex];
+
+        viewer.src = url;
+        urlInput.value = url;
+        statusText.textContent = "Loading " + url;
+
+        updateNavigationButtons();
+      }
+    });
+
+    forwardButton.addEventListener("click", () => {
+      if (historyIndex < history.length - 1) {
+        historyIndex++;
+        const url = history[historyIndex];
+
+        viewer.src = url;
+        urlInput.value = url;
+        statusText.textContent = "Loading " + url;
+
+        updateNavigationButtons();
+      }
+    });
+
+    reloadButton.addEventListener("click", () => {
+      if (!viewer.hidden) {
+        viewer.src = viewer.src;
+        statusText.textContent = "Reloading...";
+      }
+    });
+
+    viewer.addEventListener("load", () => {
+      statusText.textContent = "Page loaded";
+    });
+
+    document.querySelectorAll(".example").forEach(button => {
+      button.addEventListener("click", () => {
+        loadURL(button.dataset.url);
+      });
+    });
+
+    updateNavigationButtons();
+  </script>
+</body>
+</html>
+```
